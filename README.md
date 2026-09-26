@@ -1,78 +1,52 @@
 # PII Redaction Tool
 
-A Python-based PII Redaction Tool that detects and replaces Personally Identifiable Information (PII) from DOCX documents while maintaining consistent replacements throughout the document.
-
 ## Overview
 
-This project was developed as part of the Scaler AI Labs PII Redaction Tool assignment.
+This project is a PII (Personally Identifiable Information) redaction tool developed for the Scaler AI Labs assignment.
 
-The tool processes a DOCX document, detects supported PII categories using pattern-based and rule-based detection, and replaces the detected information with synthetic values.
+The tool reads a Red Herring Prospectus in DOCX format, detects different types of personally identifiable or sensitive information, and replaces the detected information with synthetic/fake alternatives while preserving the overall document structure.
 
-The main objective is to prevent sensitive information from remaining exposed in the processed document.
+## PII Types Detected
 
-## Features
+The tool supports detection and redaction of:
 
-- DOCX document processing
-- PII detection using regular expressions and rule-based detection
-- Consistent replacement of repeated PII
-- Address detection including multi-line addresses
-- Phone number detection
-- Email detection
-- Person name detection
-- Company name detection
-- IP address detection
-- SSN detection
-- Credit card detection with Luhn validation
-- Date of birth detection
-- Processing of:
-  - Normal paragraphs
-  - Table cells
-  - Headers
-  - Footers
+- Full Names
+- Email Addresses
+- Phone Numbers
+- Company Names
+- Physical/Mailing Addresses
+- Social Security Numbers (SSNs)
+- Credit Card Numbers
+- Dates of Birth
+- IP Addresses
 
-## Supported PII Categories
+## Approach
 
-The tool currently supports:
+The solution uses a rule-based detection pipeline implemented in Python.
 
-| Category | Detection Method |
-|---|---|
-| Names | Known-name and labelled-name matching |
-| Companies | Known-company and generic company matching |
-| Emails | Regular expression |
-| Phone Numbers | Regular expression |
-| Addresses | PIN-based and rule-based detection |
-| IP Addresses | Regular expression |
-| SSNs | Regular expression |
-| Credit Cards | Pattern matching + Luhn validation |
-| Date of Birth | Labelled and text-based patterns |
+Different detection techniques are used depending on the PII type:
 
-## How It Works
+- **Email addresses:** Regular expressions
+- **Phone numbers:** Regular expressions supporting Indian mobile numbers and landline formats
+- **IP addresses:** Regular expressions
+- **SSNs:** Regular expressions
+- **Credit card numbers:** Regular expressions with Luhn validation
+- **Dates of birth:** Pattern-based detection
+- **Names:** Known-name matching and contextual/label-based detection
+- **Company names:** Known-company matching and pattern-based detection
+- **Addresses:** Keyword-based and multi-line address detection using address indicators and PIN codes
 
-The redaction pipeline follows these steps:
+The detected PII is replaced using synthetic values.
+
+## Consistent Replacement
+
+A mapping system is used so that the same PII value is replaced with the same synthetic value throughout the document.
+
+For example:
 
 ```text
-DOCX Input
-    |
-    v
-Extract document text
-    |
-    v
-Normalize text
-    |
-    v
-Run PII detectors
-    |
-    v
-Collect detected spans
-    |
-    v
-Resolve overlapping detections
-    |
-    v
-Generate consistent synthetic replacements
-    |
-    v
-Replace PII
-    |
-    v
-Generate redacted DOCX
+Original:
+person@example.com
+
+Redacted:
+user1@example.com
